@@ -1,0 +1,4 @@
+all:
+{
+	vivado/linux_sdr.runs/impl_1/toplevel.bit
+}
