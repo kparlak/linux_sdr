@@ -120,6 +120,23 @@ architecture arch_imp of simple_fifo_v1_0_S_AXI is
 	signal byte_index	: integer;
 	signal aw_en	: std_logic;
 
+    COMPONENT axis_data_fifo_0
+      PORT (
+        s_axis_aresetn : IN STD_LOGIC;
+        s_axis_aclk : IN STD_LOGIC;
+        s_axis_tvalid : IN STD_LOGIC;
+        s_axis_tready : OUT STD_LOGIC;
+        s_axis_tdata : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+        m_axis_tvalid : OUT STD_LOGIC;
+        m_axis_tready : IN STD_LOGIC;
+        m_axis_tdata : OUT STD_LOGIC_VECTOR(31 DOWNTO 0) 
+      );
+    END COMPONENT;
+
+    signal m_axis_tdata : STD_LOGIC_VECTOR(31 DOWNTO 0);
+    signal m_axis_tvalid : STD_LOGIC;
+    signal m_axis_tready : STD_LOGIC;
+
 begin
 	-- I/O Connections assignments
 
@@ -387,6 +404,17 @@ begin
 
 
 	-- Add user logic here
+    fifo_inst : axis_data_fifo_0
+    PORT MAP (
+        s_axis_aresetn => S_AXI_ARESETN,
+        s_axis_aclk => S_AXI_ACLK,
+        s_axis_tvalid => s_axis_tvalid,
+        s_axis_tready => s_axis_tready,
+        s_axis_tdata => s_axis_tdata,
+        m_axis_tvalid => m_axis_tvalid,
+        m_axis_tready => m_axis_tready,
+        m_axis_tdata => m_axis_tdata
+    );
 
 	-- User logic ends
 
