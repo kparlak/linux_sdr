@@ -3,7 +3,7 @@
   <spirit:vendor>JHU</spirit:vendor>
   <spirit:library>user</spirit:library>
   <spirit:name>simple_fifo</spirit:name>
-  <spirit:version>1.0</spirit:version>
+  <spirit:version>1.1</spirit:version>
   <spirit:busInterfaces>
     <spirit:busInterface>
       <spirit:name>S_AXI</spirit:name>
@@ -302,7 +302,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>9a47286b</spirit:value>
+            <spirit:value>15b72a62</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -321,7 +321,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>9a47286b</spirit:value>
+            <spirit:value>15b72a62</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -842,7 +842,7 @@
     <spirit:fileSet>
       <spirit:name>xilinx_xpgui_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>xgui/simple_fifo_v1_0.tcl</spirit:name>
+        <spirit:name>xgui/simple_fifo_v1_1.tcl</spirit:name>
         <spirit:fileType>tclSource</spirit:fileType>
         <spirit:userFileType>CHECKSUM_dfe15212</spirit:userFileType>
         <spirit:userFileType>XGUI_VERSION_2</spirit:userFileType>
@@ -910,7 +910,7 @@
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>Component_Name</spirit:name>
-      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.Component_Name" spirit:order="1">simple_fifo_v1_0</spirit:value>
+      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.Component_Name" spirit:order="1">simple_fifo_v1_1</spirit:value>
     </spirit:parameter>
   </spirit:parameters>
   <spirit:vendorExtensions>
@@ -923,25 +923,25 @@
       </xilinx:taxonomies>
       <xilinx:displayName>Simple FIFO</xilinx:displayName>
       <xilinx:xpmLibraries>
-        <xilinx:xpmLibrary>XPM_CDC</xilinx:xpmLibrary>
         <xilinx:xpmLibrary>XPM_FIFO</xilinx:xpmLibrary>
       </xilinx:xpmLibraries>
       <xilinx:vendorDisplayName>JHU</xilinx:vendorDisplayName>
       <xilinx:vendorURL>https://ep.jhu.edu</xilinx:vendorURL>
-      <xilinx:coreRevision>4</xilinx:coreRevision>
+      <xilinx:coreRevision>9</xilinx:coreRevision>
       <xilinx:upgrades>
         <xilinx:canUpgradeFrom>xilinx.com:user:simple_fifo:1.0</xilinx:canUpgradeFrom>
+        <xilinx:canUpgradeFrom>JHU:user:simple_fifo:1.0</xilinx:canUpgradeFrom>
       </xilinx:upgrades>
-      <xilinx:coreCreationDateTime>2022-11-17T22:17:43Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2022-11-21T22:15:09Z</xilinx:coreCreationDateTime>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2022.1</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="b22f6470"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="c30980da"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="1c4e99fa"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="4cbd2be4"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="1bfb64b7"/>
       <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="f9a38560"/>
-      <xilinx:checksum xilinx:scope="parameters" xilinx:value="061143ec"/>
+      <xilinx:checksum xilinx:scope="parameters" xilinx:value="4102b517"/>
     </xilinx:packagingInfo>
   </spirit:vendorExtensions>
 </spirit:component>

@@ -129,13 +129,16 @@ architecture arch_imp of simple_fifo_v1_0_S_AXI is
         s_axis_tdata : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
         m_axis_tvalid : OUT STD_LOGIC;
         m_axis_tready : IN STD_LOGIC;
-        m_axis_tdata : OUT STD_LOGIC_VECTOR(31 DOWNTO 0) 
+        m_axis_tdata : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
+        axis_rd_data_count : OUT STD_LOGIC_VECTOR(31 DOWNTO 0) 
       );
     END COMPONENT;
 
     signal m_axis_tdata : STD_LOGIC_VECTOR(31 DOWNTO 0);
     signal m_axis_tvalid : STD_LOGIC;
     signal m_axis_tready : STD_LOGIC;
+    signal axis_wr_data_count : STD_LOGIC_VECTOR(31 DOWNTO 0);
+    signal axis_rd_data_count : STD_LOGIC_VECTOR(31 DOWNTO 0);
 
 begin
 	-- I/O Connections assignments
@@ -372,9 +375,9 @@ begin
 	    loc_addr := axi_araddr(ADDR_LSB + OPT_MEM_ADDR_BITS downto ADDR_LSB);
 	    case loc_addr is
 	      when b"00" =>
-	        reg_data_out <= slv_reg0;
+	        reg_data_out <= axis_rd_data_count;
 	      when b"01" =>
-	        reg_data_out <= slv_reg1;
+	        reg_data_out <= m_axis_tdata;
 	      when b"10" =>
 	        reg_data_out <= slv_reg2;
 	      when b"11" =>
@@ -404,6 +407,8 @@ begin
 
 
 	-- Add user logic here
+    --m_axis_tready <= s_axis_tvalid;
+
     fifo_inst : axis_data_fifo_0
     PORT MAP (
         s_axis_aresetn => S_AXI_ARESETN,
@@ -412,8 +417,9 @@ begin
         s_axis_tready => s_axis_tready,
         s_axis_tdata => s_axis_tdata,
         m_axis_tvalid => m_axis_tvalid,
-        m_axis_tready => m_axis_tready,
-        m_axis_tdata => m_axis_tdata
+        m_axis_tready => slv_reg2(0),
+        m_axis_tdata => m_axis_tdata,
+        axis_rd_data_count => axis_rd_data_count
     );
 
 	-- User logic ends

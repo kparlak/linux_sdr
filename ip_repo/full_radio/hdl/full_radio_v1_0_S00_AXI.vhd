@@ -518,7 +518,7 @@ begin
     fir2_data_real <= fir2_data(35 DOWNTO 20);
     m_axis_tdata(31 DOWNTO 16) <= fir2_data_imag;
     m_axis_tdata(15 DOWNTO 0) <= fir2_data_real;
-    m_axis_tvalid <= '1';
+    m_axis_tvalid <= fir2_data_valid;
 
     process(S_AXI_ACLK, S_AXI_ARESETN) is
     begin

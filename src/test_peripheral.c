@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/mman.h> 
-#include <fcntl.h> 
+#include <sys/mman.h>
+#include <fcntl.h>
 #include <unistd.h>
+
 #define _BSD_SOURCE
 
-#define RADIO_TUNER_TIMER_REG_OFFSET 3
+#define RADIO_TIMER_REG_OFFSET 3
 #define RADIO_PERIPH_ADDRESS 0x43c00000
 
 // *****************************************************
@@ -14,8 +15,8 @@
 // *****************************************************
 volatile unsigned int *get_a_pointer(unsigned int phys_addr)
 {
-    int mem_fd = open("/dev/mem", O_RDWR | O_SYNC); 
-    void *map_base = mmap(0, 4096, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd, phys_addr); 
+    int mem_fd = open("/dev/mem", O_RDWR | O_SYNC);
+    void *map_base = mmap(0, 4096, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd, phys_addr);
     volatile unsigned int *radio_base = (volatile unsigned int *)map_base;
 
     return (radio_base);
@@ -38,14 +39,14 @@ int main(int argc, char **argv)
     unsigned int num_samples = atoi(argv[1]);
 
     printf("Samples = %u\n", num_samples);
-    start_time = *(periph_base + RADIO_TUNER_TIMER_REG_OFFSET);
-    
+    start_time = *(periph_base + RADIO_TIMER_REG_OFFSET);
+
     for (int i = 0; i < num_samples; i++)
-        stop_time = *(periph_base + RADIO_TUNER_TIMER_REG_OFFSET);
+        stop_time = *(periph_base + RADIO_TIMER_REG_OFFSET);
     printf("Elapsed time in clocks = %u\n",stop_time-start_time);
 
     float throughput = (num_samples * (32.0 / 8.0) * (1 / 1000000.0)) / ((stop_time - start_time) * 0.000000008);
-    printf("Estimated Transfer throughput = %f Mbytes/sec\r\n", throughput);
+    printf("Estimated transfer throughput = %f Mbytes/sec\r\n", throughput);
 
     return 0;
 }

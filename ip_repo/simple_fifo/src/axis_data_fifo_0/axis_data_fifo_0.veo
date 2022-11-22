@@ -55,14 +55,16 @@
 
 //----------- Begin Cut here for INSTANTIATION Template ---// INST_TAG
 axis_data_fifo_0 your_instance_name (
-  .s_axis_aresetn(s_axis_aresetn),  // input wire s_axis_aresetn
-  .s_axis_aclk(s_axis_aclk),        // input wire s_axis_aclk
-  .s_axis_tvalid(s_axis_tvalid),    // input wire s_axis_tvalid
-  .s_axis_tready(s_axis_tready),    // output wire s_axis_tready
-  .s_axis_tdata(s_axis_tdata),      // input wire [31 : 0] s_axis_tdata
-  .m_axis_tvalid(m_axis_tvalid),    // output wire m_axis_tvalid
-  .m_axis_tready(m_axis_tready),    // input wire m_axis_tready
-  .m_axis_tdata(m_axis_tdata)      // output wire [31 : 0] m_axis_tdata
+  .s_axis_aresetn(s_axis_aresetn),          // input wire s_axis_aresetn
+  .s_axis_aclk(s_axis_aclk),                // input wire s_axis_aclk
+  .s_axis_tvalid(s_axis_tvalid),            // input wire s_axis_tvalid
+  .s_axis_tready(s_axis_tready),            // output wire s_axis_tready
+  .s_axis_tdata(s_axis_tdata),              // input wire [31 : 0] s_axis_tdata
+  .m_axis_tvalid(m_axis_tvalid),            // output wire m_axis_tvalid
+  .m_axis_tready(m_axis_tready),            // input wire m_axis_tready
+  .m_axis_tdata(m_axis_tdata),              // output wire [31 : 0] m_axis_tdata
+  .axis_wr_data_count(axis_wr_data_count),  // output wire [31 : 0] axis_wr_data_count
+  .axis_rd_data_count(axis_rd_data_count)  // output wire [31 : 0] axis_rd_data_count
 );
 // INST_TAG_END ------ End INSTANTIATION Template ---------
 

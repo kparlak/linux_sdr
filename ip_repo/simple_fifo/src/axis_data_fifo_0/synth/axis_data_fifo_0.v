@@ -53,7 +53,7 @@
 (* X_CORE_INFO = "axis_data_fifo_v2_0_8_top,Vivado 2022.1" *)
 (* CHECK_LICENSE_TYPE = "axis_data_fifo_0,axis_data_fifo_v2_0_8_top,{}" *)
 (* CORE_GENERATION_INFO = "axis_data_fifo_0,axis_data_fifo_v2_0_8_top,{x_ipProduct=Vivado 2022.1,x_ipVendor=xilinx.com,x_ipLibrary=ip,x_ipName=axis_data_fifo,x_ipVersion=2.0,x_ipCoreRevision=8,x_ipLanguage=VHDL,x_ipSimLanguage=MIXED,C_FAMILY=zynq,C_AXIS_TDATA_WIDTH=32,C_AXIS_TID_WIDTH=1,C_AXIS_TDEST_WIDTH=1,C_AXIS_TUSER_WIDTH=1,C_AXIS_SIGNAL_SET=0b00000000000000000000000000000011,C_FIFO_DEPTH=512,C_FIFO_MODE=1,C_IS_ACLK_ASYNC=0,C_SYNCHRONIZER_STAGE=3,C_ACLKEN_CONV_MODE=0,C_ECC_MODE=0,C_FIFO_MEMORY_TYPE=auto,C_USE_ADV_FEAT\
-URES=825241648,C_PROG_EMPTY_THRESH=5,C_PROG_FULL_THRESH=11}" *)
+URES=825503796,C_PROG_EMPTY_THRESH=5,C_PROG_FULL_THRESH=11}" *)
 (* DowngradeIPIdentifiedWarnings = "yes" *)
 module axis_data_fifo_0 (
   s_axis_aresetn,
@@ -63,7 +63,9 @@ module axis_data_fifo_0 (
   s_axis_tdata,
   m_axis_tvalid,
   m_axis_tready,
-  m_axis_tdata
+  m_axis_tdata,
+  axis_wr_data_count,
+  axis_rd_data_count
 );
 
 (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME S_RSTIF, POLARITY ACTIVE_LOW, INSERT_VIP 0" *)
@@ -86,6 +88,8 @@ input wire m_axis_tready;
 (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME M_AXIS, TDATA_NUM_BYTES 4, TDEST_WIDTH 0, TID_WIDTH 0, TUSER_WIDTH 0, HAS_TREADY 1, HAS_TSTRB 0, HAS_TKEEP 0, HAS_TLAST 0, FREQ_HZ 100000000, PHASE 0.0, LAYERED_METADATA undef, INSERT_VIP 0" *)
 (* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 M_AXIS TDATA" *)
 output wire [31 : 0] m_axis_tdata;
+output wire [31 : 0] axis_wr_data_count;
+output wire [31 : 0] axis_rd_data_count;
 
   axis_data_fifo_v2_0_8_top #(
     .C_FAMILY("zynq"),
@@ -101,7 +105,7 @@ output wire [31 : 0] m_axis_tdata;
     .C_ACLKEN_CONV_MODE(0),
     .C_ECC_MODE(0),
     .C_FIFO_MEMORY_TYPE("auto"),
-    .C_USE_ADV_FEATURES(825241648),
+    .C_USE_ADV_FEATURES(825503796),
     .C_PROG_EMPTY_THRESH(5),
     .C_PROG_FULL_THRESH(11)
   ) inst (
@@ -128,8 +132,8 @@ output wire [31 : 0] m_axis_tdata;
     .m_axis_tid(),
     .m_axis_tdest(),
     .m_axis_tuser(),
-    .axis_wr_data_count(),
-    .axis_rd_data_count(),
+    .axis_wr_data_count(axis_wr_data_count),
+    .axis_rd_data_count(axis_rd_data_count),
     .almost_empty(),
     .prog_empty(),
     .almost_full(),
