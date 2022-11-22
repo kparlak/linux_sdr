@@ -3,7 +3,6 @@
 #include <sys/mman.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <time.h>
 
 #define _BSD_SOURCE
 
@@ -14,6 +13,7 @@
 
 #define RADIO_ADC_PINC_OFFSET 0
 #define RADIO_TUNER_PINC_OFFSET 1
+#define RADIO_TIMER_REG_OFFSET 3
 #define RADIO_ADDRESS 0x43c00000
 
 // *****************************************************
@@ -43,30 +43,29 @@ int main(int argc, char **argv)
     double tuner_pinc = (10000.0/125.0e6)*4294967296.0;
     *(radio_base + RADIO_ADC_PINC_OFFSET) = (unsigned int)adc_pinc;
     *(radio_base + RADIO_TUNER_PINC_OFFSET) = (unsigned int)tuner_pinc;
-    
+
     *(fifo_base + FIFO_READY_REG_OFFSET) = 0x00;
 
     int data = *(fifo_base + FIFO_DATA_REG_OFFSET);
     unsigned int rd_cnt = *(fifo_base + FIFO_RD_CNT_REG_OFFSET);
     unsigned int words_read = 0;
+    unsigned int start_time = *(radio_base + RADIO_TIMER_REG_OFFSET);
 
-    printf("Reading 10 seconds worth of data...\r\n");
-    clock_t before = clock();
+    printf("Reading 4800000 samples...\r\n");
     do
     {
         rd_cnt = *(fifo_base + FIFO_RD_CNT_REG_OFFSET);
-        for(unsigned int i = 0; i < rd_cnt; i++)
+        for (unsigned int i = 0; i < rd_cnt; i++)
         {
             *(fifo_base + FIFO_READY_REG_OFFSET) = 0x01;
             data = *(fifo_base + FIFO_DATA_REG_OFFSET);
             *(fifo_base + FIFO_READY_REG_OFFSET) = 0x00;
             words_read += 1;
         }
-    } while(words_read < 480000);
-    clock_t delta = clock() - before;
+    } while (words_read < 480000);
 
-    int msec = delta * 1000 / CLOCKS_PER_SEC;
-    printf("Finished, %u msec elapsed\r\n", msec);
+    unsigned int stop_time = *(radio_base + RADIO_TIMER_REG_OFFSET);
+    printf("Finished, %f sec elapsed\r\n", ((stop_time - start_time) * 0.000000008));
 
     return 0;
 }

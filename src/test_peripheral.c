@@ -42,7 +42,9 @@ int main(int argc, char **argv)
     start_time = *(periph_base + RADIO_TIMER_REG_OFFSET);
 
     for (int i = 0; i < num_samples; i++)
+    {
         stop_time = *(periph_base + RADIO_TIMER_REG_OFFSET);
+    }
     printf("Elapsed time in clocks = %u\n",stop_time-start_time);
 
     float throughput = (num_samples * (32.0 / 8.0) * (1 / 1000000.0)) / ((stop_time - start_time) * 0.000000008);
