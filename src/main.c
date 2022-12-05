@@ -37,7 +37,7 @@ struct Packet
 } packet;
 
 int quit;
-
+int stream;
 pthread_mutex_t lock;
 
 // *****************************************************
@@ -67,14 +67,14 @@ void print_menu(void)
     printf("d - Step down frequency by 100 Hz\r\n");
     printf("D - Step down frequency by 1000 Hz\r\n");
     printf("T <arg> - Tune to frequency\r\n");
-    printf("s e - Enable UDP stream\r\n");
-    printf("s d - Disable UDP stream\r\n");
+    printf("s 1 - Enable UDP stream\r\n");
+    printf("s 0 - Disable UDP stream\r\n");
     printf("e - Exit program\r\n");
 }
 
 // *****************************************************
 // Name: write_pinc
-// Description: Calculates phase increment based on input frequency
+// Description: Calculates phase increment based on frequency
 // *****************************************************
 unsigned int write_pinc(unsigned int freq)
 {
@@ -85,25 +85,48 @@ unsigned int write_pinc(unsigned int freq)
     return pinc;
 }
 
+// *****************************************************
+// Name: stream_t
+// Description: Reads the FIFO and streams UDP packets
+// *****************************************************
 void *stream_t(void *vargp)
 {
-    //volatile unsigned int *fifo_base = get_a_pointer(FIFO_ADDRESS);
+    unsigned int rd_cnt = 0;
+    volatile unsigned int *fifo_base = get_a_pointer(FIFO_ADDRESS);
+    unsigned int words_read = 0;
 
     while(1)
     {
-        pthread_mutex_lock(&lock);
-        sendto(sockfd, (struct Packet*)&packet, sizeof(packet), MSG_CONFIRM, (const struct sockaddr*)&servaddr, sizeof(servaddr));
-        packet.counter += 1;
-        pthread_mutex_unlock(&lock);
+        rd_cnt = *(fifo_base + FIFO_RD_CNT_OFFSET);  
+        for(unsigned int i = 0; i < rd_cnt; i++)
+        {
+            *(fifo_base + FIFO_READY_OFFSET) = 0x01;
+            //int data = *(fifo_base + FIFO_DATA_OFFSET);
+            //short i_data = (short)((data >> 16) & 0xffff); // Bits 15-0
+            //short q_data = (short)(data & 0xffff); // Bits 31-16
+            //packet.data[words_read] = ((int)q_data & 0xffff) | ((int)i_data << 16);
+            packet.data[words_read] = *(fifo_base + FIFO_DATA_OFFSET);
+            *(fifo_base + FIFO_READY_OFFSET) = 0x00;
+            if(words_read == 255) break;
+            words_read += 1;
+        }
+        if(words_read == 255)
+        {
+            pthread_mutex_lock(&lock);
+            if(stream == 1)
+            {
+                sendto(sockfd, (struct Packet*)&packet, sizeof(packet), MSG_CONFIRM, (const struct sockaddr*)&servaddr, sizeof(servaddr));
+                packet.counter += 1;
+            }
+            pthread_mutex_unlock(&lock);
+            words_read = 0;
+        }
         if(quit == 1)
         {
             break;
         }
-        usleep(100);
     }
-
 }
-
 
 // *****************************************************
 // Name: main
@@ -111,7 +134,7 @@ void *stream_t(void *vargp)
 // *****************************************************
 int main(int argc, char **argv)
 {
-    if (argc != 2)
+    if(argc != 2)
     {
         printf("Incorrect number of arguments, ./main <ip address> \r\n");
         return -1;
@@ -122,8 +145,8 @@ int main(int argc, char **argv)
     char key;
     int adc_freq = 0;
     int tuner_freq = 0;
-    char stream = 'd';
     quit = 0;
+    stream = 0;
     const char* ip_address = argv[1];
 
     pthread_t stream_thread;
@@ -211,21 +234,27 @@ int main(int argc, char **argv)
         }
         else if(key == 's')
         {
-            scanf("%c", &stream);
-            if(stream == 'e')
+            scanf("%d", &stream);
+            if(stream == 0)
             {
+                printf("UDP stream disabled\r\n");
             }
-            else
+            else if(stream == 1)
             {
+                printf("UDP stream enabled\r\n");
             }
         }
         else if(key == 'e')
         {
             quit = 1;
+            *(radio_base + RADIO_ADC_PINC_OFFSET) = write_pinc(0);
+            *(radio_base + RADIO_TUNER_PINC_OFFSET) = write_pinc(0);
+            printf("Exiting...\r\n");
             break;
         }
     }
 
+    // Shutdown thread and close socket
     pthread_join(stream_thread, NULL);
     pthread_exit(NULL);
 
