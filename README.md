@@ -1,5 +1,9 @@
 # Linux Software-Defined Radio
 
+EN.525.742 - System-on-a-Chip FPGA Design Laboratory project
+
+This project was completed within the System-on-a-Chip FPGA Design Laboratory course at Johns Hopkins University. It constructs firmware to create a software-defined radio using a PS7 hard-core processor, DDS, and FIR filters as well software to adjust DDS peripherals and stream data via UDP to a real-time display.
+
 To generate .bit.bin:
 Execute make_project.bat from terminal
 
